@@ -35,55 +35,102 @@ def main():
                     "temperature":0.8
                 }
             )
-
-
-
+    
+    
+    
     print("Boss Introduction: ",response.text)
+
+    
 
 
     print("battle start..\n")
     print("player attacking the viscious boss\n")
     while(boss_hp >0 and player_hp >0):
+        attack_name=""
+        
         print(f"battle running.. boss hp:{boss_hp} | player hp:{player_hp}")
        
         print("Choose Player Attack: 1. Slash Attack 2. Strike Attack 3. Magic Attack 4. Defense Move")
         choice=int(input("Enter your choice: "))
+        
         if choice==1:
-            print("You used a Slash Attack!\n")
+            attack_name="Slash Attack"
+        elif choice==2:
+            attack_name="Strike Attack"
+        elif choice==3:
+            attack_name="Magic Attack"
+        elif choice==4:
+            attack_name="Defense Move"
+        else:
+            print("Invalid choice, missed the attack!!")
+        
+        response_player_turn=client.models.generate_content(
+        model="gemini-1.5-flash",
+        contents=f"Generate a  fantasy narration for a hero using {attack_name}, to attack the boss to save his city, keep it less than 20 words",
+        config={
+            "temperature":0.7,
+            "max_output_tokens": 100,
+        }  
+        )
+        print(response_player_turn.text) 
+        if choice==1:
             boss_hp=boss_hp-slash_attack
         elif choice==2:
-            print("You used a Strike Attack!\n")
             boss_hp=boss_hp-strike_attack
         elif choice==3:
-            print("You used a Magic Attack!\n")
             boss_hp=boss_hp-magic_attack
         elif choice==4:
-            print("heh, you used defense\n")
             player_hp=player_hp+defense_move
-        else:
-            print("Invalid choice")
-        print("Boss attacking the player\n")
-        choice=random.randint(1,4)
-        if choice==1:
-            print("Boss used a Slash Attack!\n")
-            player_hp=player_hp-slash_attack
-        elif choice==2:
-            print("Boss used a Strike Attack!\n")
-            player_hp=player_hp-strike_attack
-        elif choice==3:
-            print("Boss used a Magic Attack!\n")
-            player_hp=player_hp-magic_attack
-        elif choice==4:
-            print("Boss used defense\n")
-            boss_hp=boss_hp+defense_move
         
         boss_hp=max(boss_hp,0)
+        if(boss_hp==0):
+            print("battle ended... player wins!!")
+            print("player's final words: ...",response_player.text)
+            break
+        
+      
+       #BOSS ATTACKS BACK
+
+        print("Boss attacking the player\n")
+        choice=random.randint(1,4)
+
+        if choice==1:
+            attack_name="Slash Attack"
+        elif choice==2:
+            attack_name="Strike Attack"
+        elif choice==3:
+            attack_name="Magic Attack"
+        elif choice==4:
+            attack_name="Defense Move"
+        
+        response_boss_turn=client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=f"Generate a dark fantasy narration for a boss using {attack_name}, to attack the hero, keep it less than 20 words",
+        config={
+            "temperature":0.8,
+            "max_output_tokens": 100,
+        }
+        )
+        print(response_boss_turn.text)
+        #Attack mechanics of boss
+        if choice==1:
+            player_hp=player_hp-slash_attack
+        elif choice==2:
+            player_hp=player_hp-strike_attack
+        elif choice==3:
+            player_hp=player_hp-magic_attack
+        elif choice==4:
+            boss_hp=boss_hp+defense_move
+
+        boss_hp=max(boss_hp,0)
         player_hp=max(player_hp,0)
+        
+        #boss/player victory narration
         if boss_hp==0:
             print("battle ended... player wins!!")
             print("player's final words: ...",response_player.text)
-        elif player_hp==0:
         
+        elif player_hp==0:        
             print("battle ended... boss wins!!")
             print("Boss's final words:  ...",response_boss.text)
 
