@@ -6,7 +6,7 @@ load_dotenv()
 client=genai.Client()
 
 def main():
-
+    boss_flag=False
     boss_hp=100
     player_hp=85
     slash_attack=10
@@ -198,8 +198,10 @@ def main():
         elif player_hp==0:        
             print("battle ended... boss wins!!")
             print("Boss's final words:  ...",response_boss.text)
-        if boss_hp<30:
-            print("===BOSS IS ENRAGED!!===")
+        if boss_hp<30 and boss_flag==False:
+            boss_flag=True        
+            print("BOSS ENTERED PHASE 2!!")
+            
 
     #print("battle ended... player wins!!")
 if __name__=="__main__":
