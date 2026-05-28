@@ -1,5 +1,10 @@
 import os
 import random
+from dotenv import load_dotenv
+from google import genai
+load_dotenv()
+client=genai.Client()
+
 def main():
     boss_hp=100
     player_hp=85
@@ -7,7 +12,15 @@ def main():
     strike_attack=13
     magic_attack=15
     defense_move=5 #if defense employed, player hp will increse by 5
+    response=client.models.generate_content(
+    model="gemini-2.5-flash",
+    contents="generate a single scary introductory line for the boss ,keep it less than 25 words",
+    config={
+        "temperature":0.8
+        }
 
+)
+    print("Boss Introduction: ",response.text)
 
 
     print("battle start..\n")
@@ -49,7 +62,7 @@ def main():
         boss_hp=max(boss_hp,0)
         player_hp=max(player_hp,0)
         if boss_hp==0:
-            print("battle ended... boss wins!!")
+            print("battle ended... player wins!!")
         elif player_hp==0:
             print("battle ended... boss wins!!")
     #print("battle ended... player wins!!")
