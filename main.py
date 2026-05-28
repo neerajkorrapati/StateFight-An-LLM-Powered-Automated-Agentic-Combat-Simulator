@@ -48,6 +48,10 @@ def main():
         
         boss_hp=max(boss_hp,0)
         player_hp=max(player_hp,0)
-    print("battle ended... player wins!!")
+        if boss_hp==0:
+            print("battle ended... boss wins!!")
+        elif player_hp==0:
+            print("battle ended... boss wins!!")
+    #print("battle ended... player wins!!")
 if __name__=="__main__":
     main()
