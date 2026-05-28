@@ -1,0 +1,2 @@
+#this is to ignore our local environment files:
+.env
