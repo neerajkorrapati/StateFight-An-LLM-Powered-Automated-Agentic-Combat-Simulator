@@ -44,7 +44,7 @@ def main():
             player_hp=player_hp-magic_attack
         elif choice==4:
             print("Boss used defense\n")
-            boss_hp=boss_hp-defense_move
+            boss_hp=boss_hp+defense_move
         
         boss_hp=max(boss_hp,0)
         player_hp=max(player_hp,0)
