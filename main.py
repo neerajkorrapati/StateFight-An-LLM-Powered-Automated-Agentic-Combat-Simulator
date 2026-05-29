@@ -6,6 +6,7 @@ load_dotenv()
 client=genai.Client()
 
 def main():
+    boss_flag_2=False
     boss_flag=False
     boss_hp=100
     player_hp=85
@@ -28,7 +29,7 @@ def main():
     ]
     
     response=client.models.generate_content(
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     contents="generate a single scary introductory line for the boss ,keep it less than 25 words",
     config={
         "temperature":0.8
@@ -44,7 +45,11 @@ def main():
 
         print(f"battle running.. boss hp:{boss_hp} | player hp:{player_hp}")
         print("Choose Player Attack: 1. Slash Attack 2. Strike Attack 3. Magic Attack 4. Defense Move")
-        choice=int(input("Enter your choice: "))
+        try:
+            choice=int(input("Enter your choice: "))
+        except ValueError:
+            print("please enter a valid integer between 1 to 4")
+            continue
 
         if choice==1:
             player_attack_name="Slash Attack"
@@ -112,14 +117,17 @@ def main():
 
         battle_history.append({
             "role":"user",
-            "parts":[{"text": f"""the hero used {player_attack_name} attack against the boss. boss is now {boss_hp}.
+            "parts":[{"text": f"""the hero used {player_attack_name} attack against the boss. boss is now {boss_hp} hp.
                       villian boss used {boss_attack_name} against the hero.
-                      current mental state of the boss is : {boss_emotion}.
+                      current mental state of the boss is : {boss_emotion}.if boss hp is below 31, make him more enraged and annoyed.
                       hero hp : {player_hp},
                       narrate this combat turn dramatically."""}]
         })
 
         narration_response = None
+        if boss_hp<30 and boss_flag==False:
+            boss_flag=True
+            print("BOSS ENTERED PHASE 2!!")
 
         if(boss_attack_name=="Death Hell Fire"):
             narration_response=client.models.generate_content(
@@ -129,13 +137,14 @@ def main():
             )
             print(narration_response.text)
 
-        elif(boss_hp<30):
+        elif boss_hp<30 and boss_flag_2==False:
             narration_response=client.models.generate_content(
                 model='gemini-2.5-flash',
                 contents=battle_history,
                 config={"temperature":0.9,"max_output_tokens":100}
             )
             print(narration_response.text)
+            boss_flag_2=True;
 
         elif(player_hp<30):
             narration_response=client.models.generate_content(
@@ -172,9 +181,7 @@ def main():
             print("Boss's final words:  ...",loose_response.text)
             break
 
-        if boss_hp<30 and boss_flag==False:
-            boss_flag=True
-            print("BOSS ENTERED PHASE 2!!")
+        
 
 if __name__=="__main__":
     main()
