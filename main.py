@@ -32,7 +32,8 @@ def main():
     model="gemini-2.5-flash",
     contents="generate a single scary introductory line for the boss ,keep it less than 25 words",
     config={
-        "temperature":0.8
+        "temperature":0.8,
+        "max_output_tokens":500,
         }
     )
 
@@ -73,9 +74,9 @@ def main():
             print("battle ended... player wins!!")
             victory_response=client.models.generate_content(
                 model="gemini-2.5-flash",
-                contents="Generate a heroic victory line for the player who is a prince after defeating the evil demon boss.",
+                contents="Generate a heroic victory line for the player who is a prince after defeating the evil demon boss.keep it under 30 words",
                 config={
-                    "temperature":0.8,
+                    "temperature":0.8,"max_output_tokens":500,
                 }
             )
             print("player's final words: ...",victory_response.text)
@@ -137,7 +138,7 @@ His eyes glow crimson...\n""")
             narration_response=client.models.generate_content(
                 model='gemini-2.5-flash',
                 contents=battle_history,
-                config={"temperature":0.9,}
+                config={"temperature":0.9,"max_output_tokens":500,}
             )
             print(narration_response.text)
 
@@ -145,7 +146,7 @@ His eyes glow crimson...\n""")
             narration_response=client.models.generate_content(
                 model='gemini-2.5-flash',
                 contents=battle_history,
-                config={"temperature":0.9,}
+                config={"temperature":0.9,"max_output_tokens":500,}
             )
             print(narration_response.text)
             boss_flag_2=True;
@@ -154,7 +155,7 @@ His eyes glow crimson...\n""")
             narration_response=client.models.generate_content(
                 model='gemini-2.5-flash',
                 contents=battle_history,
-                config={"temperature":0.9,}
+                config={"temperature":0.9,"max_output_tokens":500,}
             )
             print(narration_response.text)
 
@@ -175,7 +176,7 @@ His eyes glow crimson...\n""")
         if player_hp==0:
             loose_response=client.models.generate_content(
                 model="gemini-2.5-flash",
-                contents="generate a single line for the defeated prince hero. keep it under 30 words.",
+                contents="generate a single line for villian after defeating the prince hero. keep it under 30 words.",
                 config={
                     "temperature":0.8,
                 }
