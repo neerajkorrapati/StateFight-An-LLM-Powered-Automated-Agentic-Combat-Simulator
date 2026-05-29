@@ -14,24 +14,19 @@ def main():
     magic_attack=15
     defense_move=5 #if defense employed, player hp will increse by 5
     Death_hell_fire=18 #special attack of the boss, which activates when boss hp is less than 30.
-    boss_history=[
+    battle_history=[
         {
         "role":"user",
-        "parts":[{"text": """You are an ancient dark fantasy boss.
-        You are fighting a prince hero.
-        Speak aggressively and dramatically.
-        Mock the player often.
-        Keep responses under 20 words."""}]
+        "parts":[{"text": """You are a cinematic dark fantasy battle narrator.
+
+         Narrate:
+        - the heroic prince,whois fighting to save his kingdom from the clutches of darkness.
+        - the ancient evil boss who is an evil arrogant being with immense power.
+
+         Keep narration dramatic and under 30 words.."""}]
         }
     ]
-    player_history=[
-        {
-        "role":"user",
-        "parts":[{"text": """You are a brave prince hero, who is trying to saave his kingdom by defeating the dark fantasy boss.
-        Speak heroically and dramatically.
-        Keep responses under 20 words."""}]
-        }
-    ]
+    #remove player and boss history, replace it with battle history
     
     response=client.models.generate_content(
     model="gemini-2.0-flash",
@@ -40,31 +35,15 @@ def main():
         "temperature":0.8
         }
     )
-
-    response_boss=client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents="generate  a  fearsome line for the boss after defeating the player who is the hero.add evil laugh and something sadistic in the next line",
-                config={
-                    "temperature":0.8
-                }
-            )
-    response_player=client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents="generate a  single heroic line for the player who is a hero, after defeating the boss who was a threat to the kingdom,(the player is a prince).",
-                config={
-                    "temperature":0.8
-                }
-            )
     
-    
-    
+ #we can remove responser_player and response_boss, replacing it with a single api call.
+      #========================BOSS INTRODUCTION=========================================  
     print("Boss Introduction: ",response.text)
-
-    
-
-
+ 
     print("battle start..\n")
+
     print("player attacking the viscious boss\n")
+    #=============MAIN LOOP================
     while(boss_hp >0 and player_hp >0):
         player_attack_name=""
         
@@ -75,50 +54,33 @@ def main():
         
         if choice==1:
             player_attack_name="Slash Attack"
-        elif choice==2:
-            player_attack_name="Strike Attack"
-        elif choice==3:
-            player_attack_name="Magic Attack"
-        elif choice==4:
-            player_attack_name="Defense Move"
-        else:
-            print("Invalid choice, missed the attack!!")
-        #replcae this response_player_turn by appending hitory to it
-        player_history.append({
-            "role":"user",
-            "parts":[{"text": f"""the hero used {player_attack_name} attack against the boss. boss is now {boss_hp}. 
-                      respond with a heroic fantasy narration."""}]
-        })
-        response_player_turn=client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=player_history,
-        config={
-            "temperature":0.7,
-            "max_output_tokens": 100,
-        }  
-        )
-        print(response_player_turn.text) 
-
-        player_history.append({
-            "role":"model",
-            "parts":[{
-                "text":response_player_turn.text
-            }]
-        })
-        if choice==1:
             boss_hp=boss_hp-slash_attack
         elif choice==2:
+            player_attack_name="Strike Attack"
             boss_hp=boss_hp-strike_attack
         elif choice==3:
+            player_attack_name="Magic Attack"
             boss_hp=boss_hp-magic_attack
         elif choice==4:
+            player_attack_name="Defense Move"
             player_hp=player_hp+defense_move
-            
+        else:
+            print("Invalid choice, missed the attack!!")
+            continue
+        #replace this response_player_turn by appending hitory to it            
         
         boss_hp=max(boss_hp,0)
         if(boss_hp==0):
             print("battle ended... player wins!!")
-            print("player's final words: ...",response_player.text)
+            victory_response=client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=f"Generate a herioc victory line for the player who is a princeafter defeating the evil demon boss who was a threat to the kingdom. keep it under 30 words.",
+                config={
+                    "temperature":0.8,
+                    "max_output_tokens":100,
+                }
+            )
+            print("player's final words: ...",victory_response.text)
             break
         
       
@@ -140,64 +102,94 @@ def main():
 
         if bchoice==1:
             boss_attack_name="Slash Attack"
+            player_hp=player_hp-slash_attack
         elif bchoice==2:
             boss_attack_name="Strike Attack"
+            player_hp=player_hp-strike_attack
         elif bchoice==3:
             boss_attack_name="Magic Attack"
+            player_hp=player_hp-magic_attack
         elif bchoice==4:
             boss_attack_name="Defense Move"
+            boss_hp=boss_hp+defense_move
         elif bchoice==5:
             boss_attack_name="Death Hell Fire"
+            player_hp= player_hp-Death_hell_fire
+            boss_hp=boss_hp+defense_move #when boss uses special attack, it also
         
-        #removed boss_turn_api_call
-        boss_history.append({
+        #removed boss_turn_api_call, instead we use a single API call.
+        battle_history.append({
             "role":"user",
             "parts":[{"text": f"""the hero used {player_attack_name} attack against the boss. boss is now {boss_hp}. 
-                      Attack player with {boss_attack_name}. Mock the prince while attaacking.
-                      current mental state of the boss is : {boss_emotion}, respond according to the mental state."""}]
+                      villian boss used {boss_attack_name} against the hero.
+                      current mental state of the boss is : {boss_emotion}.
+                      hero hp : {player_hp},
+                      narrate this combat turn dramatically adding boss's current emotion to affect the narration.keep it under 25 words for each character."""}]
         })
-        response_boss_turn=client.models.generate_content(
+        
+        #to further reduce api calls, call the ai only when something interesting happens.
+        if(boss_attack_name=="Death Hell Fire"):
+          narration_response=client.models.generate_content(
             model='gemini-2.5-flash',
-            contents=boss_history,
+            contents=battle_history,
             config={
                 "temperature":0.9,
                 "max_output_tokens": 100,
             }
         )
-        print(response_boss_turn.text)
+          print(narration_response.text)
+        elif(boss_hp<30):
+          narration_response=client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=battle_history,
+            config={
+                "temperature":0.9,
+                "max_output_tokens": 100,
+            }
+        )
+        elif(player_hp<30):
+              narration_response=client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=battle_history,
+                config={
+                 "temperature":0.9,
+                 "max_output_tokens": 100,
+                })
+              print(narration_response.text)    
+        else:                
+            print(f" Player used {player_attack_name} and boss used {boss_attack_name} ")
 
         # immidietly after generating boss response, we will save it into the boss's history.
-        boss_history.append({
+        battle_history.append({
             "role":"model",
             "parts":[{
-                "text": response_boss_turn.text
+                "text": narration_response.text
             }]
-
         })
-        #Attack mechanics of boss
-        if bchoice==1:
-            player_hp=player_hp-slash_attack
-        elif bchoice==2:
-            player_hp=player_hp-strike_attack
-        elif bchoice==3:
-            player_hp=player_hp-magic_attack
-        elif bchoice==4:
-            boss_hp=boss_hp+defense_move
-        elif bchoice==5:
-            player_hp= player_hp-Death_hell_fire
-            boss_hp=boss_hp+defense_move #when boss uses special attack, it also heals itself a bit, making it more challenging for the player.
+        #memory trimming, to efficiently make use of credits nd load
+        battle_history=battle_history[-12:]
+        #Attack mechanics of boss, changed back to above config.
 
         boss_hp=max(boss_hp,0)
         player_hp=max(player_hp,0)
         
+        
         #boss/player victory narration
         if boss_hp==0:
             print("battle ended... player wins!!")
-            print("player's final words: ...",response_player.text)
+            print("player's final words: ...",victory_response.text)
         
-        elif player_hp==0:        
-            print("battle ended... boss wins!!")
-            print("Boss's final words:  ...",response_boss.text)
+        elif player_hp==0:     
+               loose_response=client.models.generate_content(
+               model="gemini-2.5-flash",
+               contents=f"generate a single line for the player who is a hero, after being defeated by the boss who was a threat to the kingdom.(the player is a prince). keep it under 30 words and scary.",
+               config={
+                "temperature":0.8,
+                "max_output_tokens":100,
+            }
+        )   
+               print("battle ended... boss wins!!")
+               print("Boss's final words:  ...",loose_response.text)
         if boss_hp<30 and boss_flag==False:
             boss_flag=True        
             print("BOSS ENTERED PHASE 2!!")
