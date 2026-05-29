@@ -1,0 +1,21 @@
+[33m8301cc0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: reset: moving to HEAD
+[33m8301cc0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{1}: checkout: moving from 8301cc02addc86bb4c0392a94db11941aa47cd1a to main
+[33m8301cc0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{2}: commit: phase_9
+[33mdf670e8[m HEAD@{3}: checkout: moving from main to df670e82d9f88f356f63f0da1810030ba70e012b
+[33mb13d48e[m HEAD@{4}: commit: phase_9_complete
+[33mba88d79[m HEAD@{5}: commit: phase_9 optimization, 2
+[33mbc5d6aa[m HEAD@{6}: commit: phase 9_minor bugs resolved
+[33m8ada838[m HEAD@{7}: commit: phase_9_optimization
+[33m085dbb9[m HEAD@{8}: commit: phase_8_state_driven_boss behaviour and combat
+[33mc4d07c8[m HEAD@{9}: pull --tags origin main: Merge made by the 'ort' strategy.
+[33mb95000f[m HEAD@{10}: commit: phase_8_state-driven-boss-behaviour and combat,
+[33mbced345[m HEAD@{11}: commit: phase_4_multiple_api_calls_for conversation between player and boss for each attack
+[33m925229d[m HEAD@{12}: commit: phase_3_added_boss_and_player_final_winning_lines_through api integration
+[33mf0141ae[m HEAD@{13}: filter-branch: rewrite
+[33m11732ea[m HEAD@{14}: pull --tags origin main: Merge made by the 'ort' strategy.
+[33m7751628[m HEAD@{15}: commit: ignore_.env_phase3
+[33m6d9ba71[m HEAD@{16}: pull --tags origin main: Merge made by the 'ort' strategy.
+[33m46c7154[m HEAD@{17}: commit: phase3_usingAi_simple_boss_intro
+[33md0066c5[m HEAD@{18}: commit: phase_2_structural_implementation
+[33mdf670e8[m HEAD@{19}: Branch: renamed refs/heads/master to refs/heads/main
+[33mdf670e8[m HEAD@{21}: commit (initial): Initial Commit, base structure
