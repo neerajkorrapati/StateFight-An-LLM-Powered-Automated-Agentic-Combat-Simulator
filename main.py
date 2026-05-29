@@ -128,6 +128,11 @@ def main():
         if boss_hp<30 and boss_flag==False:
             boss_flag=True
             print("BOSS ENTERED PHASE 2!!")
+            print(f"""=== THE ABYSS LORD ENTERS PHASE 2 ===
+
+Dark flames erupt from the boss...
+His armor cracks...
+His eyes glow crimson...\n""")
 
         if(boss_attack_name=="Death Hell Fire"):
             narration_response=client.models.generate_content(
@@ -155,7 +160,7 @@ def main():
             print(narration_response.text)
 
         else:
-            print(f" Player used {player_attack_name} and boss used {boss_attack_name} ")
+            print(f"\n Player used {player_attack_name} and boss used {boss_attack_name} \n")
 
         if narration_response is not None:
             battle_history.append({
@@ -177,7 +182,7 @@ def main():
                     "max_output_tokens":100,
                 }
             )
-            print("battle ended... boss wins!!")
+            print("\nbattle ended... boss wins!!")
             print("Boss's final words:  ...",loose_response.text)
             break
 
