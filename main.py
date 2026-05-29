@@ -76,7 +76,6 @@ def main():
                 contents="Generate a heroic victory line for the player who is a prince after defeating the evil demon boss.",
                 config={
                     "temperature":0.8,
-                    "max_output_tokens":100,
                 }
             )
             print("player's final words: ...",victory_response.text)
@@ -138,7 +137,7 @@ His eyes glow crimson...\n""")
             narration_response=client.models.generate_content(
                 model='gemini-2.5-flash',
                 contents=battle_history,
-                config={"temperature":0.9,"max_output_tokens":100}
+                config={"temperature":0.9,}
             )
             print(narration_response.text)
 
@@ -146,7 +145,7 @@ His eyes glow crimson...\n""")
             narration_response=client.models.generate_content(
                 model='gemini-2.5-flash',
                 contents=battle_history,
-                config={"temperature":0.9,"max_output_tokens":100}
+                config={"temperature":0.9,}
             )
             print(narration_response.text)
             boss_flag_2=True;
@@ -155,7 +154,7 @@ His eyes glow crimson...\n""")
             narration_response=client.models.generate_content(
                 model='gemini-2.5-flash',
                 contents=battle_history,
-                config={"temperature":0.9,"max_output_tokens":100}
+                config={"temperature":0.9,}
             )
             print(narration_response.text)
 
@@ -179,7 +178,6 @@ His eyes glow crimson...\n""")
                 contents="generate a single line for the defeated prince hero. keep it under 30 words.",
                 config={
                     "temperature":0.8,
-                    "max_output_tokens":100,
                 }
             )
             print("\nbattle ended... boss wins!!")
